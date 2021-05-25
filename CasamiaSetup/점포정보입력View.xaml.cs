@@ -51,6 +51,9 @@ namespace CasamiaSetup
             RegisterOCX(Constants.CASHDRAWER_OCX_PATH);
             RegisterOCX(Constants.PRINTER_OCX_PATH);
 
+            var donglePortFinder = new DonglePortFinder();
+            int port = await donglePortFinder.GetConnectedPortAsync();
+
             try
             {
                 Logger.Write($@"config 파일 작성 시작");

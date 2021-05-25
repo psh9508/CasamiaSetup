@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigModel.cs" />
+    <Compile Include="DonglePortFinder.cs" />
     <Compile Include="점포정보입력View.xaml.cs">
       <DependentUpon>점포정보입력View.xaml</DependentUpon>
     </Compile>
