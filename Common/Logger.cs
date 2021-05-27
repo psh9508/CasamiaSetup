@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CasamiaSetup
+namespace Common
 {
     public static class Logger
     {
@@ -36,7 +36,7 @@ namespace CasamiaSetup
         {
             CreateLogFolder();
 
-            lock(_syncObject)
+            lock (_syncObject)
             {
                 using (var logFile = new StreamWriter(_logFileFullPath, true))
                 {

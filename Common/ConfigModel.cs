@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CasamiaSetup
+namespace Common
 {
     public enum PosKInd
     {
@@ -214,5 +214,27 @@ namespace CasamiaSetup
         {
             get => $"{CompanyCode.Trim()}{StoreCode.Trim()}{PosNo.Trim()}";
         }
+
+        #region 카드리더기
+        [JsonProperty]
+        [Description("서명패드 포트")]
+        public string SignPadPort { get; set; } = string.Empty;
+
+        [JsonProperty]
+        [Description("서명패드 속도")]
+        public string SignPadBaudRate { get; set; } = "57600";
+
+        [JsonProperty]
+        [Description("동글 포트")]
+        public string DonglePort { get; set; } = string.Empty;
+
+        [JsonProperty]
+        [Description("동글 BaudRate")]
+        public string DongleBaudRate { get; set; } = "115200";
+
+        [JsonProperty]
+        [Description("동글종류")]
+        public string DongleKind { get; set; } = "KIS_EDI";
+        #endregion
     }
 }

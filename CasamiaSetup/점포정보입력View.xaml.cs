@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Ports;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -16,6 +17,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Common;
 
 namespace CasamiaSetup
 {
@@ -49,10 +51,7 @@ namespace CasamiaSetup
 
             await CopyDeafultConfigFileAsync(saveFullPath);
             RegisterOCX(Constants.CASHDRAWER_OCX_PATH);
-            RegisterOCX(Constants.PRINTER_OCX_PATH);
-
-            var donglePortFinder = new DonglePortFinder();
-            int port = await donglePortFinder.GetConnectedPortAsync();
+            RegisterOCX(Constants.PRINTER_OCX_PATH);           
 
             try
             {
@@ -69,18 +68,37 @@ namespace CasamiaSetup
                 configModel.InterCompanyCode = "0001";
                 configModel.CompanyCode = "0001";
                 configModel.TenantCode = "0001";
-                //configModel.DonglePort = "3";
-                //configModel.DongleBaudRate = "115200";
-                //configModel.LanguageType = LanguageType.Kor;
-                //configModel.VCatType = VCatType.VCat3410;
-                //configModel.StoreKind = StoreKind.GentleMonster;
-                //configModel.StoreType = StoreType.DirectManagementStore;
-                //configModel.StoreBridge = StoreBridge.External;
-                //configModel.TenantSaleType = TenantSaleType.SaleShop;
-                //configModel.IsUseCrm = true;
-                //configModel.IsProductSerial = true;
-                //configModel.SaleMode = SaleMode.Normal;
-                //configModel.PosStatus = PosStatus.Opened;
+
+                //var donglePortFinder = new DonglePortFinder();
+                //int port = await donglePortFinder.GetConnectedPortAsync();
+
+                //const int FAILED = -1;
+
+                //if (port != FAILED)
+                //{
+                //    configModel.DonglePort = port.ToString();
+                //    configModel.DongleBaudRate = "115200";
+                //    configModel.DongleKind = "KIS_EDI";
+
+                //    var signpadPorts = SerialPort.GetPortNames().Where(x => x.Contains("COM")).Select(x => Convert.ToInt32(x.Replace("COM", ""))).Where(x => x != port);
+
+                //    Logger.Write($"signpadPorts = {string.Join(",", signpadPorts)}");
+
+                //    if (signpadPorts.Count() > 1)
+                //    {
+                //        var form = new 싸인패드찾기View(signpadPorts);
+                //        form.Owner = this;
+
+                //        form.SelectedPort += signpadPort => {
+                //            configModel.SignPadPort = signpadPort;
+                //            configModel.SignPadBaudRate = "57600";
+                //        };
+
+                //        form.ShowDialog();
+
+                //        Logger.Write("싸인패드 찾기 View 닫힘");
+                //    }
+                //}
 
                 Save(configModel, saveFullPath);
 

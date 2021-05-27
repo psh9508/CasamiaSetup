@@ -8,6 +8,7 @@
     Title="점포 정보 입력"
     Width="350"
     Height="180"
+    ResizeMode="NoResize"
     WindowStartupLocation="CenterOwner"
     WindowStyle="ToolWindow"
     mc:Ignorable="d">

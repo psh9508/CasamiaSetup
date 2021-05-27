@@ -16,6 +16,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Common;
 
 namespace CasamiaSetup
 {
@@ -93,13 +94,15 @@ namespace CasamiaSetup
 
             await Task.Delay(TimeSpan.FromSeconds(3));
 
-            string copyPath = System.IO.Path.Combine(Constants.SETUP_PATH, "CloudPOS_Installer.msi");
+            string installerCopyPath = System.IO.Path.Combine(Constants.SETUP_PATH, "CloudPOS_Installer.msi");
+            string kisDongleCopyPath = System.IO.Path.Combine(Constants.SETUP_PATH, "KisDongleDll.dll");
 
             var tasks = new List<Task>()
             {
                 CopyResource(@"CasamiaSetup.Resources.OPOSCashDrawer.ocx", Constants.CASHDRAWER_OCX_PATH),
                 CopyResource(@"CasamiaSetup.Resources.OPOSPOSPrinter.ocx", Constants.PRINTER_OCX_PATH),
-                CopyResource(@"CasamiaSetup.Resources.CloudPOS_Installer.msi", copyPath),
+                CopyResource(@"CasamiaSetup.Resources.CloudPOS_Installer.msi", installerCopyPath),
+                CopyResource(@"CasamiaSetup.Resources.KisDongleDll.dll", kisDongleCopyPath),
             };
 
             await Task.WhenAll(tasks.ToArray());

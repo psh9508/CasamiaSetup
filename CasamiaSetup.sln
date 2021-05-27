@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CasamiaSetup", "CasamiaSetup\CasamiaSetup.csproj", "{448DBAEF-C035-4C19-B05A-28AD58050744}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DongleSetup", "DongleSetup\DongleSetup.csproj", "{6874C2BB-4512-40AA-9119-FF9C61FD1C04}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{71EB86E2-003C-45D3-9B21-EE3EB123150E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{448DBAEF-C035-4C19-B05A-28AD58050744}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{448DBAEF-C035-4C19-B05A-28AD58050744}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{448DBAEF-C035-4C19-B05A-28AD58050744}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6874C2BB-4512-40AA-9119-FF9C61FD1C04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6874C2BB-4512-40AA-9119-FF9C61FD1C04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6874C2BB-4512-40AA-9119-FF9C61FD1C04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6874C2BB-4512-40AA-9119-FF9C61FD1C04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71EB86E2-003C-45D3-9B21-EE3EB123150E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71EB86E2-003C-45D3-9B21-EE3EB123150E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71EB86E2-003C-45D3-9B21-EE3EB123150E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71EB86E2-003C-45D3-9B21-EE3EB123150E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

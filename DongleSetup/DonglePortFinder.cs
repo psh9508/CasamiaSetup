@@ -5,8 +5,9 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Common;
 
-namespace CasamiaSetup
+namespace DongleSetup
 {
     public interface IDonglePortFinder
     {
@@ -19,6 +20,8 @@ namespace CasamiaSetup
 
     public class DonglePortFinder : IDonglePortFinder
     {
+        private enum STATE_CODE { STATE_INIT, STATE_REQ, STATE_WAIT, STATE_RECV, STATE_ERROR, STATE_CANCEL, STATE_TIMEOUT };
+
         [DllImport("KisDongleDll.dll", CallingConvention = CallingConvention.Cdecl)]
         private extern static int Dongle_Init();
 
@@ -34,8 +37,13 @@ namespace CasamiaSetup
         [DllImport("KisDongleDll.dll", CallingConvention = CallingConvention.Cdecl)]
         private extern static int Dongle_Approval(int nPortNo, int nBaudRate, string sCommandID, string inSendData, int nSendDataLen);
 
-        [DllImport("KisDongleDll.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("isDongleDll.dll", CallingConvention = CallingConvention.Cdecl)]
         private extern static int Dongle_State();
+
+        [DllImport("KisDongleDll.dll", CallingConvention = CallingConvention.Cdecl)]
+        private extern static int Dongle_GetData([MarshalAs(UnmanagedType.LPArray)] byte[] outRecvData);
+
+        private const int SUCCESS = 0;
 
         public async Task<int> GetConnectedPortAsync()
         {
@@ -59,7 +67,7 @@ namespace CasamiaSetup
                         continue; // 맞나?
                     }
 
-                    bool openResult = await TryConnectAsync(port, 115200);
+                    bool openResult = await TryConnectAsync(port, "31");
 
                     if (openResult)
                     {
@@ -102,11 +110,8 @@ namespace CasamiaSetup
             }
         }
 
-        //public bool ReqcmdASYNC(int nPortNo, int nBaudRate, string inSendData, int nSendDataLen)
-        public async Task<bool> TryConnectAsync(int nPortNo, int nBaudRate)
+        public async Task<bool> TryConnectAsync(int portNo, string command)
         {
-            const int SUCCESS = 0;
-
             try
             {
                 Logger.Write($"{this.GetType().Name} 실행");
@@ -119,12 +124,18 @@ namespace CasamiaSetup
 
                     if (nRet != SUCCESS)
                     {
-                        Logger.Write("Dongle_Init 실패");
-                        return false;
+                        Dongle_Release(); // 한번 더 해제
+
+                        nRet = Dongle_Init();
+
+                        if (nRet != SUCCESS)
+                        {
+                            Logger.Write("Dongle_Init 실패");
+                            return false;
+                        }
                     }
 
-                    //nRet = Dongle_Approval(nPortNo, nBaudRate, "31", inSendData, nSendDataLen);
-                    nRet = Dongle_Approval(nPortNo, nBaudRate, "31", "", 0);
+                    nRet = Dongle_Approval(portNo, 115200, command, "", 0);
 
                     if (nRet != SUCCESS)
                     {
@@ -132,7 +143,70 @@ namespace CasamiaSetup
                         return false;
                     }
 
+                    if (command == "1B")
+                    {
+                        Logger.Write("1B라서 return");
+                        return true;
+                    }
+
+                    int state = 0;
+
+                    Dongle_Wait(1, 30000);
+
+                    // 무한루프 안도나?
+                    while (true)
+                    {
+                        Dongle_Approval(portNo, 115200, "1B", "", 0);
+
+                        Dongle_Stop();
+                        Dongle_Release();
+
+                        state = Dongle_State();
+
+                        if (state >= (int)STATE_CODE.STATE_RECV)
+                        {
+                            Logger.Write("break");
+                            break;
+                        }
+                    }
+
+                    Logger.Write($"state == STATE_RECV? [{state == (int)STATE_CODE.STATE_RECV}]");
+
+                    if (state != (int)STATE_CODE.STATE_RECV)
+                    {
+                        Logger.Write("state != (int)STATE_CODE.STATE_RECV");
+                        return false;
+                    }
+
+                    byte[] recvData = new byte[2048];
+                    int recvDataLength = Dongle_GetData(recvData);
+
+                    var outByte = new byte[recvData.Length];
+                    recvData.CopyTo(outByte, 0);
+                    Array.Resize(ref outByte, recvDataLength);
+
+                    if (recvDataLength < 2)
+                    {
+                        Logger.Write("recvDataLength < 2");
+                        return false;
+                    }
+
+                    const string GET_DATA_SUCCESS = "00";
+                    string outCode = Encoding.Default.GetString(recvData, 0, 2);
+
+                    if (outCode != GET_DATA_SUCCESS)
+                    {
+                        Logger.Write($"outCode != SUCCESS [{outCode}]");
+                        return false;
+                    }
+
+                    var outString = Encoding.Default.GetString(recvData, 0, recvDataLength);
+                    var serialNo = outString?.Substring(2, 10);
+
+                    Logger.Write($"serialNo = {serialNo}");
+
                     return true;
+
                 });
             }
             catch (Exception ex)
