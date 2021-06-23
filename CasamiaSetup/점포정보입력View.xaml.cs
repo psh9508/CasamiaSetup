@@ -66,8 +66,9 @@ namespace CasamiaSetup
                 configModel.InterCompanyCode = "0001";
                 configModel.CompanyCode = "0001";
                 configModel.TenantCode = "0001";
+                configModel.DongleBaudRate = "115200";
+                configModel.SignPadBaudRate = "57600";
                 //configModel.DonglePort = "3";
-                //configModel.DongleBaudRate = "115200";
                 //configModel.LanguageType = LanguageType.Kor;
                 //configModel.VCatType = VCatType.VCat3410;
                 //configModel.StoreKind = StoreKind.GentleMonster;

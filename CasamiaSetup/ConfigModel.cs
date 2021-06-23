@@ -214,5 +214,15 @@ namespace CasamiaSetup
         {
             get => $"{CompanyCode.Trim()}{StoreCode.Trim()}{PosNo.Trim()}";
         }
+
+        #region 카드리더기
+        [JsonProperty]
+        [Description("서명패드 속도")]
+        public string SignPadBaudRate { get; set; } = "57600";
+
+        [JsonProperty]
+        [Description("동글 BaudRate")]
+        public string DongleBaudRate { get; set; } = "115200";
+        #endregion
     }
 }
