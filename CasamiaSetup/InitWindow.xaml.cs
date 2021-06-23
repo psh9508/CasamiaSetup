@@ -156,7 +156,7 @@ namespace CasamiaSetup
                 }
 
                 Logger.Write($"POSForDotNet 설치를 실행합니다.");
-                Process.Start(filePath, null).WaitForExit();
+                Process.Start(filePath, @"/quiet").WaitForExit();
                 Logger.Write($"POSForDotNet 설치를 종료");
             });
         }
