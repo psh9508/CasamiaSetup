@@ -45,7 +45,7 @@ namespace CasamiaSetup
 
             await Task.Delay(TimeSpan.FromSeconds(1));
 
-            MessageBox.Show("설치를 완료 했습니다.");
+            //MessageBox.Show("설치를 완료 했습니다.");
             Logger.Write("설치 완료");
 
             await OpenCasamiaPOSAsync();
