@@ -37,6 +37,11 @@ namespace CasamiaSetup
                 return;
             }
 
+            // API를 이용해서 DB 조회
+            // 값이 있으면 진행
+            // 없으면 폼 Hide하고 등록 폼 Show 하고 이 함수 return
+            // 이벤트를 이용해서 등록 폼 닫히면 현재 폼 Show
+
             string directory = @"C:\CloudPOS\Env\";
             string saveFullPath = System.IO.Path.Combine(directory, @"Config.json");
 

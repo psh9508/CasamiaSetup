@@ -63,7 +63,14 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Communication\Base\InquiryBase.cs" />
+    <Compile Include="Communication\Base\ResponseBase.cs" />
+    <Compile Include="Communication\Enum\MessageCode.cs" />
+    <Compile Include="Communication\PosConfig.cs" />
+    <Compile Include="Communication\SetupStoreParam.cs" />
     <Compile Include="ConfigModel.cs" />
+    <Compile Include="Extensions\ObjectExtension.cs" />
+    <Compile Include="Http\HttpDataSender.cs" />
     <Compile Include="점포정보입력View.xaml.cs">
       <DependentUpon>점포정보입력View.xaml</DependentUpon>
     </Compile>
