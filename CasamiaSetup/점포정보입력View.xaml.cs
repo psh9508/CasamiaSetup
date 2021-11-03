@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using CasamiaSetup.Communication;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,79 +25,120 @@ namespace CasamiaSetup
     /// </summary>
     public partial class 점포정보입력View : Window
     {
+        public bool IsProcessing
+        {
+            get { return (bool)GetValue(IsProcessingProperty); }
+            set { SetValue(IsProcessingProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsProcessingProperty =
+            DependencyProperty.Register("IsProcessing", typeof(bool), typeof(점포정보입력View), new PropertyMetadata(false));
+
+        private readonly IUsedPosService _usedPosService;
+
         public 점포정보입력View()
         {
             InitializeComponent();
+            _usedPosService = new SetupService();
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(tbx점포코드.Text) || string.IsNullOrWhiteSpace(tbx포스번호.Text))
-            {
-                MessageBox.Show("점포코드와 포스번호가 모두 입력 되어야 합니다.");
-                return;
-            }
-
-            // API를 이용해서 DB 조회
-            // 값이 있으면 진행
-            // 없으면 폼 Hide하고 등록 폼 Show 하고 이 함수 return
-            // 이벤트를 이용해서 등록 폼 닫히면 현재 폼 Show
-
-            string directory = @"C:\CloudPOS\Env\";
-            string saveFullPath = System.IO.Path.Combine(directory, @"Config.json");
-
-            if (!Directory.Exists(directory))
-            {
-                Logger.Write($@"[{directory}]경로가 없습니다.");
-                Directory.CreateDirectory(directory);
-                Logger.Write($@"[{directory}]경로를 만들었습니다.");
-            }
-
-            await CopyDeafultConfigFileAsync(saveFullPath);
-            RegisterOCX(Constants.CASHDRAWER_OCX_PATH);
-            RegisterOCX(Constants.PRINTER_OCX_PATH);
-
             try
             {
-                Logger.Write($@"config 파일 작성 시작");
+                IsProcessing = true;
 
-                var configModel = Deserialize<ConfigModel>(saveFullPath);
+                await Task.Delay(5000);
 
-                configModel.StoreCode = tbx점포코드.Text;
-                configModel.PosNo = tbx포스번호.Text;
-                configModel.MainUrl = @"https://cloudposinternal.shinsegae.com";
-                configModel.SubUrl = @"https://cloudposinternaldr.shinsegae.com";
-                configModel.TrainUrl = @"http://10.253.12.20";
-                configModel.PrinterName = "POSPrinter";
-                configModel.InterCompanyCode = "0001";
-                configModel.CompanyCode = "0001";
-                configModel.TenantCode = "0001";
-                configModel.DongleBaudRate = "115200";
-                configModel.SignPadBaudRate = "57600";
-                //configModel.DonglePort = "3";
-                //configModel.LanguageType = LanguageType.Kor;
-                //configModel.VCatType = VCatType.VCat3410;
-                //configModel.StoreKind = StoreKind.GentleMonster;
-                //configModel.StoreType = StoreType.DirectManagementStore;
-                //configModel.StoreBridge = StoreBridge.External;
-                //configModel.TenantSaleType = TenantSaleType.SaleShop;
-                //configModel.IsUseCrm = true;
-                //configModel.IsProductSerial = true;
-                //configModel.SaleMode = SaleMode.Normal;
-                //configModel.PosStatus = PosStatus.Opened;
+                if (string.IsNullOrWhiteSpace(tbx점포코드.Text) || string.IsNullOrWhiteSpace(tbx포스번호.Text))
+                {
+                    MessageBox.Show("점포코드와 포스번호가 모두 입력 되어야 합니다.");
+                    return;
+                }
 
-                Save(configModel, saveFullPath);
+                var response = await _usedPosService.HasPosAsync(new InqCasamiaUsedPosParam()
+                {
+                    StoreCode = tbx점포코드.Text,
+                    PosNo = tbx포스번호.Text,
+                });
 
-                Logger.Write($@"config 파일 작성 완료");
+                if (response == false)
+                {
+                    MessageBox.Show($"등록되지 않은 정보의 포스로 설치를 시도 하였습니다.{Environment.NewLine}다음 입력창을 통해 등록을 해주시기 바랍니다.");
+                    this.Hide();
 
-                DialogResult = true;
-                this.Close();
+                    var view = new 점포생성View();
+                    view.Owner = this;
+                    view.Closed += (s, e1) =>
+                    {
+                        this.Show();
+                    };
+
+                    view.Show();
+
+                    return;
+                }
+
+                string directory = @"C:\CloudPOS\Env\";
+                string saveFullPath = System.IO.Path.Combine(directory, @"Config.json");
+
+                if (!Directory.Exists(directory))
+                {
+                    Logger.Write($@"[{directory}]경로가 없습니다.");
+                    Directory.CreateDirectory(directory);
+                    Logger.Write($@"[{directory}]경로를 만들었습니다.");
+                }
+
+                await CopyDeafultConfigFileAsync(saveFullPath);
+                RegisterOCX(Constants.CASHDRAWER_OCX_PATH);
+                RegisterOCX(Constants.PRINTER_OCX_PATH);
+
+                try
+                {
+                    Logger.Write($@"config 파일 작성 시작");
+
+                    var configModel = Deserialize<ConfigModel>(saveFullPath);
+
+                    configModel.StoreCode = tbx점포코드.Text;
+                    configModel.PosNo = tbx포스번호.Text;
+                    configModel.MainUrl = @"https://cloudposinternal.shinsegae.com";
+                    configModel.SubUrl = @"https://cloudposinternaldr.shinsegae.com";
+                    configModel.TrainUrl = @"http://10.253.12.20";
+                    configModel.PrinterName = "POSPrinter";
+                    configModel.InterCompanyCode = "0001";
+                    configModel.CompanyCode = "0001";
+                    configModel.TenantCode = "0001";
+                    configModel.DongleBaudRate = "115200";
+                    configModel.SignPadBaudRate = "57600";
+                    //configModel.DonglePort = "3";
+                    //configModel.LanguageType = LanguageType.Kor;
+                    //configModel.VCatType = VCatType.VCat3410;
+                    //configModel.StoreKind = StoreKind.GentleMonster;
+                    //configModel.StoreType = StoreType.DirectManagementStore;
+                    //configModel.StoreBridge = StoreBridge.External;
+                    //configModel.TenantSaleType = TenantSaleType.SaleShop;
+                    //configModel.IsUseCrm = true;
+                    //configModel.IsProductSerial = true;
+                    //configModel.SaleMode = SaleMode.Normal;
+                    //configModel.PosStatus = PosStatus.Opened;
+
+                    Save(configModel, saveFullPath);
+
+                    Logger.Write($@"config 파일 작성 완료");
+
+                    DialogResult = true;
+                    this.Close();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("설정파일 저장에 실패 했습니다.");
+                    Logger.WriteError("설정파일 저장에 실패 했습니다.");
+                    Logger.WriteError(ex.ToString());
+                }
             }
-            catch (Exception ex)
+            finally
             {
-                MessageBox.Show("설정파일 저장에 실패 했습니다.");
-                Logger.WriteError("설정파일 저장에 실패 했습니다.");
-                Logger.WriteError(ex.ToString());
+                IsProcessing = false;
             }
         }
 

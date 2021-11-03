@@ -66,11 +66,17 @@
     <Compile Include="Communication\Base\InquiryBase.cs" />
     <Compile Include="Communication\Base\ResponseBase.cs" />
     <Compile Include="Communication\Enum\MessageCode.cs" />
-    <Compile Include="Communication\PosConfig.cs" />
-    <Compile Include="Communication\SetupStoreParam.cs" />
+    <Compile Include="Communication\InqCasamiaSaveUsedPosParam.cs" />
+    <Compile Include="Communication\InqCasamiaSaveUsedPosResponse.cs" />
+    <Compile Include="Communication\InqCasamiaUsedPosParam.cs" />
+    <Compile Include="Communication\InqCasamiaUsedPosResponse.cs" />
     <Compile Include="ConfigModel.cs" />
     <Compile Include="Extensions\ObjectExtension.cs" />
     <Compile Include="Http\HttpDataSender.cs" />
+    <Compile Include="SetupService.cs" />
+    <Compile Include="점포생성View.xaml.cs">
+      <DependentUpon>점포생성View.xaml</DependentUpon>
+    </Compile>
     <Compile Include="점포정보입력View.xaml.cs">
       <DependentUpon>점포정보입력View.xaml</DependentUpon>
     </Compile>
@@ -91,6 +97,10 @@
       <DependentUpon>InitWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Logger.cs" />
+    <Page Include="점포생성View.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="점포정보입력View.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

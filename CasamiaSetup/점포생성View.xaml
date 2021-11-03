@@ -1,0 +1,212 @@
+﻿<Window
+    x:Class="CasamiaSetup.점포생성View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:CasamiaSetup"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="_this"
+    Title="점포 생성정보 입력"
+    Width="350"
+    Height="360"
+    ResizeMode="NoResize"
+    WindowStartupLocation="CenterOwner"
+    WindowStyle="ToolWindow"
+    mc:Ignorable="d">
+    <StackPanel Margin="20,20,20,0">
+        <StackPanel.Style>
+            <Style TargetType="StackPanel">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding ElementName=_this, Path=IsProcessing}" Value="True">
+                        <Setter Property="IsEnabled" Value="False" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </StackPanel.Style>
+
+        <StackPanel Height="25" Orientation="Horizontal">
+            <Label
+                Margin="0,0,17,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
+                Content="점포코드 : " />
+            <TextBox
+                x:Name="tbx점포코드"
+                Width="200"
+                Height="24"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                HorizontalContentAlignment="Left"
+                VerticalContentAlignment="Center" />
+        </StackPanel>
+        <StackPanel
+            Height="25"
+            Margin="0,10,0,0"
+            Orientation="Horizontal">
+            <Label
+                Margin="0,0,17,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                HorizontalContentAlignment="Left"
+                VerticalContentAlignment="Center"
+                Content="포스번호 : " />
+            <TextBox
+                x:Name="tbx포스번호"
+                Width="200"
+                Height="24"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                HorizontalContentAlignment="Left"
+                VerticalContentAlignment="Center" />
+        </StackPanel>
+        <StackPanel
+            Height="25"
+            Margin="0,10,0,0"
+            Orientation="Horizontal">
+            <Label
+                Margin="0,0,17,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                HorizontalContentAlignment="Left"
+                VerticalContentAlignment="Center"
+                Content="점포이름 : " />
+            <TextBox
+                x:Name="tbx점포이름"
+                Width="200"
+                Height="24"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                HorizontalContentAlignment="Left"
+                VerticalContentAlignment="Center" />
+        </StackPanel>
+        <StackPanel
+            Height="25"
+            Margin="0,10,0,0"
+            Orientation="Horizontal">
+            <Label
+                Margin="0,0,5,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                HorizontalContentAlignment="Left"
+                VerticalContentAlignment="Center"
+                Content="사용시작일 : " />
+            <TextBox
+                x:Name="tbx사용시작일"
+                Width="160"
+                Height="24"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                HorizontalContentAlignment="Left"
+                VerticalContentAlignment="Center" />
+        </StackPanel>
+        <StackPanel
+            Height="25"
+            Margin="0,10,0,0"
+            Orientation="Horizontal">
+            <CheckBox x:Name="chk만료일" VerticalAlignment="Center" />
+            <Label
+                Margin="0,0,12,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                HorizontalContentAlignment="Left"
+                VerticalContentAlignment="Center"
+                Content="만료일 : " />
+            <TextBox
+                x:Name="tbx만료일"
+                Width="160"
+                Height="24"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                HorizontalContentAlignment="Left"
+                VerticalContentAlignment="Center">
+                <TextBox.Style>
+                    <Style TargetType="TextBox">
+                        <Setter Property="IsEnabled" Value="False" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=chk만료일, Path=IsChecked}" Value="True">
+                                <Setter Property="IsEnabled" Value="True" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBox.Style>
+            </TextBox>
+        </StackPanel>
+        <StackPanel
+            Height="25"
+            Margin="0,10,0,0"
+            Orientation="Horizontal">
+            <CheckBox x:Name="chk매장타입" VerticalAlignment="Center" />
+            <Label
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                HorizontalContentAlignment="Left"
+                VerticalContentAlignment="Center"
+                Content="매장타입 : " />
+            <ComboBox
+                x:Name="cbo매장타입"
+                Width="200"
+                Height="24"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                HorizontalContentAlignment="Left"
+                VerticalContentAlignment="Center">
+                <ComboBox.Style>
+                    <Style TargetType="ComboBox">
+                        <Setter Property="IsEnabled" Value="False" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=chk매장타입, Path=IsChecked}" Value="True">
+                                <Setter Property="IsEnabled" Value="True" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ComboBox.Style>
+                <ComboBoxItem Content="SIS" />
+                <ComboBoxItem Content="로드샵" />
+                <ComboBoxItem Content="팝업" />
+                <ComboBoxItem Content="대리점" />
+            </ComboBox>
+        </StackPanel>
+        <StackPanel
+            Height="25"
+            Margin="0,10,0,0"
+            Orientation="Horizontal">
+            <CheckBox x:Name="chk메모" VerticalAlignment="Center" />
+            <Label
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                HorizontalContentAlignment="Left"
+                VerticalContentAlignment="Center"
+                Content="메모 : " />
+            <TextBox
+                x:Name="tbx메모"
+                Width="225"
+                Height="24"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                HorizontalContentAlignment="Left"
+                VerticalContentAlignment="Center">
+                <TextBox.Style>
+                    <Style TargetType="TextBox">
+                        <Setter Property="IsEnabled" Value="False" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=chk메모, Path=IsChecked}" Value="True">
+                                <Setter Property="IsEnabled" Value="True" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBox.Style>
+            </TextBox>
+        </StackPanel>
+
+        <Button
+            Width="100"
+            Height="30"
+            Margin="0,20,0,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Click="Button_Click"
+            Content="확 인" />
+    </StackPanel>
+</Window>

@@ -11,10 +11,6 @@ namespace CasamiaSetup.Communication.Base
     [JsonObject]
     public class InquiryBase
     {
-        [Description("POS정보")]
-        [JsonProperty]
-        public PosConfig PosConfig { get; set; }
-
         [Description("POS IP 어드레스")]
         [JsonProperty]
         public string ClientIPAddress { get; set; }

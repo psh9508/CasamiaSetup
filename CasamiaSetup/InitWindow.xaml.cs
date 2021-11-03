@@ -1,4 +1,5 @@
-﻿using CasamiaSetup.Communication.Base;
+﻿using CasamiaSetup.Communication;
+using CasamiaSetup.Communication.Base;
 using CasamiaSetup.Http;
 using Microsoft.Win32;
 using System;
@@ -28,7 +29,7 @@ namespace CasamiaSetup
     {
         private string _msg = string.Empty;
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-        private readonly HttpDataSender _httpDataSender = new HttpDataSender();
+        private readonly SetupService _usedPosService = new SetupService();
 
         public InitWindow()
         {
@@ -39,7 +40,7 @@ namespace CasamiaSetup
         {
             StartMessageUpdateThread(_cancellationTokenSource);
 
-            await SetJWTToeknAsync();
+            await _usedPosService.SetJWTTokenAsync();
 
             await CreateSetupFolderAsync();
             await CopyResourceFilesAsync();
@@ -53,23 +54,10 @@ namespace CasamiaSetup
             //MessageBox.Show("설치를 완료 했습니다.");
             Logger.Write("설치 완료");
 
-            await OpenCasamiaPOSAsync();
+            OpenCasamiaPOS();
 
             _cancellationTokenSource.Cancel();
             this.Close();
-        }
-
-        private async Task SetJWTToeknAsync()
-        {
-            const string systemCode = @"CasamiaSetup";
-            const string terminalCode = @"9999";
-
-            var response = await _httpDataSender.SendGet<ResponseBase>($@"/CloudPOS.Service.Casamia.Authentication/Authentication.svc/GetSecureToken/{systemCode}/{terminalCode}");
-
-            if (response.MessageCode != Communication.Enum.MessageCode.SUCCESS)
-                throw new System.Security.SecurityException("JWT 토큰 발급에 실패 했습니다.");
-
-            _httpDataSender.SetHeader("pos-api-token", response.Message);
         }
 
         private async Task CreateSetupFolderAsync()
@@ -271,22 +259,19 @@ namespace CasamiaSetup
             Logger.Write($"점포 정보 입력 종료");
         }
 
-        private async Task OpenCasamiaPOSAsync()
+        private void OpenCasamiaPOS()
         {
-            await Task.Run(() =>
-            {
-                var casamiaPOSFullPath = @"C:\CloudPOS\Start\CloudPOS.Tablet.CasamiaStart.exe";
+            var casamiaPOSFullPath = @"C:\CloudPOS\Start\CloudPOS.Tablet.CasamiaStart.exe";
 
-                if (File.Exists(casamiaPOSFullPath))
-                {
-                    Logger.Write($"설치 완료 후 까사미아 POS 실행");
-                    Process.Start(casamiaPOSFullPath, null);
-                }
-                else
-                {
-                    Logger.Write($"[{casamiaPOSFullPath}] 경로 없어 까사미아 POS 실행 실패");
-                }
-            });
+            if (File.Exists(casamiaPOSFullPath))
+            {
+                Logger.Write($"설치 완료 후 까사미아 POS 실행");
+                Process.Start(casamiaPOSFullPath, null);
+            }
+            else
+            {
+                Logger.Write($"[{casamiaPOSFullPath}] 경로 없어 까사미아 POS 실행 실패");
+            }
         }
 
         private async Task CopyResource(string resourcePath, string copyPath)
